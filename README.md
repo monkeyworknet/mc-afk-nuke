@@ -26,7 +26,7 @@ Prerequisites
 Installing Binary
 -----------------
 
-1.  Place mc-afk-nuke in any directoy you like (recommend /home/minecraft)
+1.  Place /bin/mc-afk-nuke in any directoy you like (recommend /home/minecraft)
 2.  Move default-config.json to config.json and edit it as required
 3.  Run  ./mc-afk-nuke  with no command options and insure it works (make sure someone is on the server when you execute this) 
 4.  If it executes properly then setup a crontab to run it on a regular schedule (see schedule example below)
