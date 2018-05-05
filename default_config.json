@@ -1,0 +1,10 @@
+{
+  "databasepath": "/home/minecraft/afk-kicker/",
+  "databasename": "players",
+  "statspath": "/home/minecraft/server/world/stats/",
+  "servername": "servername",
+  "serverport": "25565",
+  "afkkickvaluemin": 4,
+  "afkkickvaluemax": 7,
+  "kickreason": "AFK Bot Kicked You"
+}
