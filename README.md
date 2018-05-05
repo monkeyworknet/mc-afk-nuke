@@ -12,12 +12,15 @@ Prerequisites
 
 1.  Minecraft running on a linux server
 2.  An init script for starting/stoping minecraft (example init included or https://minecraft.gamepedia.com/Tutorials/Server_startup_script)
-          -  Note if you are using a different start script the program is written to expect to give the following command to kick:
+
+	-  Note if you are using a different start script the program is written to expect to give the following command to kick:
 			/usr/sbin/service/minecraft command kick PLAYER REASON
-	  -  If you need to change this edit the main.go file and modify "kickcmd" and "kickargs" variables.
+	-  If you need to change this edit the main.go file and modify "kickcmd" and "kickargs" variables.
+	  
 3.  An ability to use cron or some other scheduler to run the script on a regular basis.
 4.  Your minecraft server needs to be able to be quieried:
-          -  In your server.properties file for minecraft make sure "enable-query=true" and "query.port=25565" is set (port can be whatever you wish)
+
+	-  In your server.properties file for minecraft make sure "enable-query=true" and "query.port=25565" is set (port can be whatever you wish)
 
 
 Installing Binary
@@ -44,6 +47,7 @@ Building from Source
 -------------------
 
 Built with go version go1.10 linux/amd64
+
 Uses all standard libs + "github.com/nanobox-io/golang-scribble"
 
 Entire program is held in main.go with exception of the configuration section - should be split out more in future.
@@ -52,10 +56,10 @@ Entire program is held in main.go with exception of the configuration section - 
 Future To-Do
 ------------
 
-Refactor and simplify code
-Write go tests 
-Expand the configuration options  
-Allow the ability to mark a person AFK if they don't move a certian distance (right now any movement resets you)
+1. Refactor and simplify code
+2. Write go tests 
+3. Expand the configuration options  
+4. Allow the ability to mark a person AFK if they don't move a certian distance (right now any movement resets you)
 
 
 
