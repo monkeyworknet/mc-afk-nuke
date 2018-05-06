@@ -46,7 +46,7 @@ func main() {
 	_, err = os.Stat(logfilename)
 	if os.IsNotExist(err) {
 		file, _ := os.Create(logfilename)
-		defer file.Close()
+		file.Close()
 	}
 
 	// Grab active users on server
@@ -103,21 +103,16 @@ func main() {
 
 	// if player list is greater than 1 then itterate over playerlist
 
-	if ActivePlayers.Playercount > 0 {
-		for _, player := range ActivePlayers.Playerlist {
-			uuidfilename, uuid := getUUID(player)
-			fullpath := config.Path + uuidfilename
-			currenttotalmovement := playerMovementStats(fullpath)
-			newtotmov, newafk := jSONdbwork(player, uuid, currenttotalmovement)
-			fmt.Println(player, uuid, currenttotalmovement, newtotmov, newafk)
-			if afkkickvalue <= newafk {
-				// run kick function
-				_ = kickPlayer(player, uuid)
-			}
+	for _, player := range ActivePlayers.Playerlist {
+		uuidfilename, uuid := getUUID(player)
+		fullpath := config.Path + uuidfilename
+		currenttotalmovement := playerMovementStats(fullpath)
+		newtotmov, newafk := jSONdbwork(player, uuid, currenttotalmovement)
+		fmt.Println(player, uuid, currenttotalmovement, newtotmov, newafk)
+		if afkkickvalue <= newafk {
+			// run kick function
+			_ = kickPlayer(player, uuid)
 		}
-
-	} else {
-		fmt.Println("Server Empty")
 	}
 
 }
@@ -156,6 +151,7 @@ func getUUID(name string) (string, string) {
 			newLog.Println("Error getting UUID (minetools api?)  -  ", err)
 			return "", ""
 		}
+		defer resp.Body.Close()
 
 		if err := json.NewDecoder(resp.Body).Decode(&UUID); err != nil {
 			newLog.Println("Error Decoding UUID  -  ", err)
@@ -168,15 +164,10 @@ func getUUID(name string) (string, string) {
 	}
 
 	// insert hypens as per file name and add extension
+	// changes c9e1dad1a9484625a98deeb047941cf4  to c9e1dad1-a948-4625-a98d-c9e1dad1a9484625a98d.json
 
-	index1 := 8
-	index2 := 12
-	index3 := 16
-	index4 := 20
-	dash := "-"
-	ext := ".json"
-
-	filename := ut[:index1] + dash + ut[index1:index2] + dash + ut[index2:index3] + dash + ut[index3:index4] + dash + ut[index4:] + ext
+	ut = "c9e1dad1a9484625a98deeb047941cf4"
+	filename := fmt.Sprintf("%s-%s-%s-%s-%s.json", ut[:8], ut[8:12], ut[12:16], ut[16:20], ut[:20])
 
 	return filename, ut
 }
