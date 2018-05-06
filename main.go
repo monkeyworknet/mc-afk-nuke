@@ -164,7 +164,8 @@ func getUUID(name string) (string, string) {
 	}
 
 	// insert hypens as per file name and add extension
-	// changes c9e1dad1a9484625a98deeb047941cf4  to c9e1dad1-a948-4625-a98d-c9e1dad1a9484625a98d.json
+	// changes c9e1dad1a9484625a98deeb047941cf4  to c9e1dad1-a948-4625-a98d-eeb047941cf4.json
+
 
 	ut = "c9e1dad1a9484625a98deeb047941cf4"
 	filename := fmt.Sprintf("%s-%s-%s-%s-%s.json", ut[:8], ut[8:12], ut[12:16], ut[16:20], ut[20:])
