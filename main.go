@@ -109,6 +109,19 @@ func main() {
 		currenttotalmovement := playerMovementStats(fullpath)
 		newtotmov, newafk := jSONdbwork(player, uuid, currenttotalmovement)
 		fmt.Println(player, uuid, currenttotalmovement, newtotmov, newafk)
+               if newafk >= config.Afkkickvaluemin - 1 {
+                        // Warn Player
+                        fmt.Println(player, " Warning AFK for too long")
+                        newLog.Println("INFO - ", player, " Warned of AFK Status")
+                        warncmd := "/usr/sbin/service"
+                        warnargs := []string{"minecraft", "command say", player, " Warning AFK detected"}
+                        if err := exec.Command(warncmd, warnargs...).Run(); err != nil {
+                                fmt.Fprintln(os.Stderr, err)
+                                newLog.Print("Something went wrong when warning", player, err)
+                        }
+
+                }
+
 		if afkkickvalue <= newafk {
 			// run kick function
 			_ = kickPlayer(player, uuid)
@@ -166,8 +179,6 @@ func getUUID(name string) (string, string) {
 	// insert hypens as per file name and add extension
 	// changes c9e1dad1a9484625a98deeb047941cf4  to c9e1dad1-a948-4625-a98d-eeb047941cf4.json
 
-
-	ut = "c9e1dad1a9484625a98deeb047941cf4"
 	filename := fmt.Sprintf("%s-%s-%s-%s-%s.json", ut[:8], ut[8:12], ut[12:16], ut[16:20], ut[20:])
 
 	return filename, ut

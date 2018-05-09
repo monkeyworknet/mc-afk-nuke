@@ -1,5 +1,0 @@
-MCAFK : 2018/05/06 14:31:11 main.go:181: ERROR - can't read file  /home/minecraft/server/world/stats/c9e1dad1-a948-4625-a98d-c9e1dad1a9484625a98d.json
-MCAFK : 2018/05/06 14:31:11 main.go:241: INFO - AFK Values Reset for  Creepers2Kill
-MCAFK : 2018/05/06 14:31:11 main.go:181: ERROR - can't read file  /home/minecraft/server/world/stats/c9e1dad1-a948-4625-a98d-c9e1dad1a9484625a98d.json
-MCAFK : 2018/05/06 14:31:11 main.go:241: INFO - AFK Values Reset for  Dyna_Mighty
-MCAFK : 2018/05/06 14:33:31 main.go:70: Error Decoding PlayerCountlist  -   http: read on closed response body
