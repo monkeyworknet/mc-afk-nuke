@@ -109,18 +109,18 @@ func main() {
 		currenttotalmovement := playerMovementStats(fullpath)
 		newtotmov, newafk := jSONdbwork(player, uuid, currenttotalmovement)
 		fmt.Println(player, uuid, currenttotalmovement, newtotmov, newafk)
-               if newafk >= config.Afkkickvaluemin - 1 {
-                        // Warn Player
-                        fmt.Println(player, " Warning AFK for too long")
-                        newLog.Println("INFO - ", player, " Warned of AFK Status")
-                        warncmd := "/usr/sbin/service"
-                        warnargs := []string{"minecraft", "command say", player, " Warning AFK detected"}
-                        if err := exec.Command(warncmd, warnargs...).Run(); err != nil {
-                                fmt.Fprintln(os.Stderr, err)
-                                newLog.Print("Something went wrong when warning", player, err)
-                        }
+		if newafk >= config.Afkkickvaluemin-1 {
+			// Warn Player
+			fmt.Println(player, " Warning AFK for too long")
+			newLog.Println("INFO - ", player, " Warned of AFK Status")
+			warncmd := "/usr/sbin/service"
+			warnargs := []string{"minecraft", "command say", player, " Warning AFK detected"}
+			if err := exec.Command(warncmd, warnargs...).Run(); err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				newLog.Print("Something went wrong when warning", player, err)
+			}
 
-                }
+		}
 
 		if afkkickvalue <= newafk {
 			// run kick function
@@ -196,27 +196,31 @@ func playerMovementStats(file string) int {
 	}
 
 	var stats struct {
-		Walked   int `json:"stat.walkOneCm"`
-		Crouched int `json:"stat.crouchedOneCm"`
-		Sprint   int `json:"stat.sprintOneCm"`
-		Swim     int `json:"stat.swimOneCm"`
-		Fall     int `json:"stat.fallOneCm"`
-		Climb    int `json:"stat.climbOneCm"`
-		Fly      int `json:"stat.flyOneCm"`
-		Dive     int `json:"stat.diveOneCm"`
-		Minecart int `json:"stat.minecartOneCm"`
-		Boat     int `json:"stat.boatOneCm"`
-		Pig      int `json:"stat.pigOneCm"`
-		Horse    int `json:"stat.horseOneCm"`
-		Aviate   int `json:"stat.aviateOneCm"`
+		Stats struct {
+			MinecraftCustom struct {
+				MinecraftSprintOneCm         int `json:"minecraft:sprint_one_cm,omitempty"`
+				MinecraftWalkOneCm           int `json:"minecraft:walk_one_cm,omitempty"`
+				MinecraftSwimOneCm           int `json:"minecraft:swim_one_cm,omitempty"`
+				MinecraftFlyOneCm            int `json:"minecraft:fly_one_cm,omitempty"`
+				MinecraftCrouchOneCm         int `json:"minecraft:crouch_one_cm,omitempty"`
+				MinecraftWalkUnderWaterOneCm int `json:"minecraft:walk_under_water_one_cm,omitempty"`
+				MinecraftBoatOneCm           int `json:"minecraft:boat_one_cm,omitempty"`
+				MinecraftWalkOnWaterOneCm    int `json:"minecraft:walk_on_water_one_cm,omitempty"`
+				MinecraftFallOneCm           int `json:"minecraft:fall_one_cm,omitempty"`
+				MinecraftDiveOneCm           int `json:"minecraft:dive_one_cm,omitempty"`
+				MinecraftMinecartOneCm       int `json:"minecraft:minecart_one_cm,omitempty"`
+				MinecraftPigOneCm            int `json:"minecraft:pig_one_cm,omitempty"`
+				MinecraftHorseOneCm          int `json:"minecraft:horse_one_cm,omitempty"`
+				MinecraftAviateOneCm         int `json:"minecraft:aviate_one_cm,omitempty"`
+			} `json:"minecraft:custom"`
+		} `json:"stats"`
 	}
-
 	if err := json.Unmarshal(raw, &stats); err != nil {
 		newLog.Println("Error - Can't understand stats json file ", file)
 		return 0
 	}
 
-	TotalMovementReturn := stats.Walked + stats.Crouched + stats.Sprint + stats.Swim + stats.Fall + stats.Climb + stats.Fly + stats.Dive + stats.Minecart + stats.Boat + stats.Pig + stats.Horse + stats.Aviate
+	TotalMovementReturn := stats.Stats.MinecraftCustom.MinecraftAviateOneCm + stats.Stats.MinecraftCustom.MinecraftBoatOneCm + stats.Stats.MinecraftCustom.MinecraftCrouchOneCm + stats.Stats.MinecraftCustom.MinecraftDiveOneCm + stats.Stats.MinecraftCustom.MinecraftFallOneCm + stats.Stats.MinecraftCustom.MinecraftFlyOneCm + stats.Stats.MinecraftCustom.MinecraftHorseOneCm + stats.Stats.MinecraftCustom.MinecraftMinecartOneCm + stats.Stats.MinecraftCustom.MinecraftPigOneCm + stats.Stats.MinecraftCustom.MinecraftSprintOneCm + stats.Stats.MinecraftCustom.MinecraftSwimOneCm + stats.Stats.MinecraftCustom.MinecraftWalkOneCm
 
 	return TotalMovementReturn
 }
@@ -243,8 +247,10 @@ func jSONdbwork(name string, filename string, totalmove int) (int, int) {
 		}
 
 	}
+	
+	delta := totalmove - playerread.Totalmove
 
-	if playerread.Totalmove == totalmove {
+	if delta <= 500  {
 		afkvalue = playerread.Afkindex + 1
 		playerwrite = Playersdb{Name: name, Filename: filename, Totalmove: totalmove, Afkindex: afkvalue}
 		newLog.Println("INFO - Incremented AFK value for ", name)
